@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Due Process"><!ENTITY author "Bernhard Gründling">]>
+
+<resources>
+    <string name="app_name">&appname;</string>
+    <string name="setup_app_name">Setup &appname;</string>
+    <string name="first_run_alert">You are about to set up &appname;.\n\nThis app depends on the <b>Work Profile</b> feature of Android to hide the existence of apps. \n\nIf you choose to continue, &appname;
+        will set up a Work Profile for you. Within this profile, you will be able to run your privacy sensitive apps.</string>
+    <string name="first_run_alert_cancel">Cancel</string>
+    <string name="first_run_alert_continue">Continue</string>
+    <string name="profile_name">Managed Profile</string>
+    <string name="managed_account_complete_message">Managed Account complete</string>
+    <string name="account_migration_failed_message">Account migration failed</string>
+    <string name="add_account_later_message">Add account later</string>
+    <string name="finish_button">Finish</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_appmanagement">Manage Apps</string>
+    <string name="title_lockdown">Lockdown</string>
+    <string name="intro_ending_lockdown">To end lockdown and recover access to this app, you have to:\n1. Turn your work profile off and on again.\n2. Wait a couple of seconds, until an invisible, secret lockscreen overlay is created.\n3. Enter your secret pattern.</string>
+    <string name="tapAndHold">Tap and hold to trigger lockdown or wipe.</string>
+</resources>

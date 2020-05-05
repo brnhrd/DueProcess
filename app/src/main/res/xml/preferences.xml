@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Trigger Configuration">
+        <SwitchPreference
+            app:title="Enable Lockdown Trigger"
+            app:key="lockdownTrigger"/>
+
+        <SeekBarPreference
+            app:dependency="lockdownTrigger"
+            android:defaultValue="1"
+            android:max="5"
+            app:key="passwordFailsLockdown"
+            app:min="1"
+            app:showSeekBarValue="true"
+            app:summary="Choose how often the lockscreen challenge (e.g PIN, pattern, password) has to be failed to trigger lockdown-mode."
+            app:title="Lockdown Trigger" />
+
+        <SwitchPreference
+            app:title="Enable Wipe Trigger"
+            app:key="wipeTrigger"/>
+
+        <SeekBarPreference
+            app:dependency="wipeTrigger"
+            android:defaultValue="2"
+            android:max="6"
+            app:key="passwordFailsWipe"
+            app:min="1"
+            app:showSeekBarValue="true"
+            app:summary="Choose how often the lockscreen challenge (e.g PIN, pattern, password) has to be failed to completely wipe/delete the work-profile and this app from your phone."
+            app:title="Wipe Trigger" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Lockdown-Mode">
+
+        <Preference
+            app:summary="Choose what should happen when you trigger lockdown-mode:"/>
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="hideSensitiveApps"
+            app:selectable="false"
+            app:summary="Hide all apps which are marked sensitive in the app management screen. This is the core feature of lockdown mode and cannot be disabled."
+            app:title="Hide all sensitive apps"
+
+            />
+        <SwitchPreference
+            app:key="hideLauncherIcon"
+            app:defaultValue="true"
+            app:summary="Hides the launcher icon of this management app."
+            app:title="Hide launcher icon of this app"
+            />
+        <SwitchPreference
+            app:key="removeGoogleAccount"
+            app:defaultValue="true"
+            app:summary="Disables the Google Account in the work profile (hides Google Play Services). It's enabled again when lockdown ends."
+            app:title="Remove Google Account"
+            />
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="lockNowProfile"
+            app:summary="Lock the work profile with the PIN/pattern/password challenge. This makes it inaccessible from the personal profile."
+            app:title="Lock work profile"
+            />
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="lockNowProfileKeyEvict"
+            app:summary="This removes the encryption key from memory, making the the encrypted data within the profile inaccessible. This will show a persistent notification however."
+            app:title="Evict Encryption Key"
+            app:dependency="lockNowProfile"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Ending Lockdown-Mode"
+        >
+
+        <Preference
+            app:summary="Choose what happens when you end lockdown-mode:"/>
+
+        <SwitchPreference
+            app:key="showSensitiveApps"
+            app:summary="Makes all sensitive apps visible again after lockdown-mode has ended."
+            app:title="Show all sensitive apps again"
+            />
+
+        <SwitchPreference
+            app:key="showLauncherIcon"
+            app:dependency="hideLauncherIcon"
+            app:defaultValue="true"
+            app:summary="Shows the launcher icon of this management app again. This has to be enabled when you enable hiding the icon. Otherwise you would not be able to open this app anymore."
+            app:title="Show launcher icon of this app"
+            />
+
+
+        <Preference
+            app:summary="Configure the secret pattern for unlocking the management app and ending the lockdown-mode."
+            app:title="Unlock pattern"
+            app:fragment="CodeConfigActivity"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Miscellaneous">
+        <EditTextPreference
+            app:key="orgName"
+            app:summary="Edit the work profile's organization's name that is displayed throughout various places in Android and on this app's lockscreen. \nCurrent value: %s"
+            app:title="Organization Name"
+            />
+
+        <EditTextPreference
+            app:key="lockscreenDescription"
+            app:summary="Edit the description that is shown on the app's lockscreen. \nCurrent value: %s"
+            app:defaultValue="This application is managed by your organization."
+            app:title="Lockscreen Description"
+            />
+
+        <SwitchPreferenceCompat
+            app:key="showSystemApps"
+            app:title="Manage system apps"
+            app:summary="Show and manage system apps."
+            app:defaultValue="false"
+            />
+
+        <SwitchPreferenceCompat
+            app:key="thirdPartySources"
+            app:title="Third-party sources"
+            app:summary="Allow third party sources for app installation (not recommended)."
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:title="Introduction"
+            app:summary="Start the app introduction again."
+            app:fragment="IntroActivity"
+            />
+
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_appmanagement"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="@string/title_appmanagement" />
+
+    <item
+        android:id="@+id/navigation_lockdown"
+        android:icon="@drawable/ic_window_shutter"
+        android:title="@string/title_lockdown" />
+
+
+    <item
+        android:id="@+id/navigation_config"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/title_settings" />
+
+
+</menu>
