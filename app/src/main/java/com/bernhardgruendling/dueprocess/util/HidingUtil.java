@@ -76,12 +76,7 @@ public class HidingUtil {
 
         DevicePolicyManager devicePolicyManager = Util.getDevicePolicyManager(context);
         ComponentName adminComponentName = Util.getAdminComponentName(context);
-        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_SHARE_INTO_MANAGED_PROFILE);
-        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_APPS);
-        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_DEBUGGING_FEATURES);
-        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_CROSS_PROFILE_COPY_PASTE);
-        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY);
-        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_APPS_CONTROL);
+        clearUserRestrictions(devicePolicyManager, adminComponentName);
 
         devicePolicyManager.setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_FEATURES_NONE);
 
@@ -91,6 +86,15 @@ public class HidingUtil {
         if (appSettings.getPreferenceBoolean(AppSettings.SHOW_SENSITIVE_APPS)) {
             showSensitiveApps(context);
         }
+    }
+
+    private static void clearUserRestrictions(DevicePolicyManager devicePolicyManager, ComponentName adminComponentName) {
+        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_SHARE_INTO_MANAGED_PROFILE);
+        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_APPS);
+        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_DEBUGGING_FEATURES);
+        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_CROSS_PROFILE_COPY_PASTE);
+        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY);
+        devicePolicyManager.clearUserRestriction(adminComponentName, UserManager.DISALLOW_APPS_CONTROL);
     }
 
     private static void restoreStoragePermissions(Context context, DevicePolicyManager devicePolicyManager, ComponentName adminComponentName, AppSettings appSettings) {
@@ -118,12 +122,8 @@ public class HidingUtil {
 
         DevicePolicyManager devicePolicyManager = Util.getDevicePolicyManager(context);
         ComponentName adminComponentName = Util.getAdminComponentName(context);
-        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_SHARE_INTO_MANAGED_PROFILE);
-        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_APPS);
-        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_DEBUGGING_FEATURES);
-        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_CROSS_PROFILE_COPY_PASTE);
-        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY);
-        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_APPS_CONTROL);
+        setUserRestrictions(devicePolicyManager, adminComponentName);
+
         devicePolicyManager.setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_BIOMETRICS);
 
         disableStoragePermissions(context, devicePolicyManager, adminComponentName, appSettings);
@@ -141,6 +141,15 @@ public class HidingUtil {
         } catch (ClassCastException e) {
             //activity not available
         }
+    }
+
+    private static void setUserRestrictions(DevicePolicyManager devicePolicyManager, ComponentName adminComponentName) {
+        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_SHARE_INTO_MANAGED_PROFILE);
+        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_APPS);
+        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_DEBUGGING_FEATURES);
+        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_CROSS_PROFILE_COPY_PASTE);
+        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY);
+        devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_APPS_CONTROL);
     }
 
     private static void disableStoragePermissions(Context context, DevicePolicyManager devicePolicyManager, ComponentName adminComponentName, AppSettings appSettings) {
