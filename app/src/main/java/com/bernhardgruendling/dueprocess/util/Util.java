@@ -19,8 +19,13 @@ package com.bernhardgruendling.dueprocess.util;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 import com.bernhardgruendling.dueprocess.DueProcessDeviceAdminReceiver;
+
+import java.util.Collections;
+import java.util.List;
 
 
 public class Util {
@@ -38,4 +43,23 @@ public class Util {
         return new ComponentName(context.getApplicationContext(), DueProcessDeviceAdminReceiver.class);
     }
 
+    public static List<ApplicationInfo> getAllInstalledApplicationsSorted(Context context, boolean withSystemApps) {
+        PackageManager pM = context.getPackageManager();
+        List<ApplicationInfo> allApps = pM.getInstalledApplications(
+                PackageManager.MATCH_UNINSTALLED_PACKAGES);
+        if (!withSystemApps) {
+            allApps.removeIf(n -> (isAndroidSystemPackageWithoutLaunchIntent(context, pM, n) || isWeirdPackage(n)));
+        }
+        allApps.removeIf(n -> n.packageName.equals(context.getPackageName()));
+        Collections.sort(allApps, new ApplicationInfo.DisplayNameComparator(pM));
+        return allApps;
+    }
+
+    private static boolean isWeirdPackage(ApplicationInfo n) {
+        return n.packageName.equals("com.android.traceur") || n.packageName.equals("com.google.android.angle");
+    }
+
+    private static boolean isAndroidSystemPackageWithoutLaunchIntent(Context context, PackageManager pM, ApplicationInfo n) {
+        return pM.getLaunchIntentForPackage(n.packageName) == null && !Util.getDevicePolicyManager(context).isApplicationHidden(Util.getAdminComponentName(context), n.packageName);
+    }
 }

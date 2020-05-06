@@ -1,20 +1,23 @@
 package com.bernhardgruendling.dueprocess.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.UserHandle;
 import android.os.UserManager;
-import android.util.Log;
+
 
 import com.bernhardgruendling.dueprocess.AppSettings;
 import com.bernhardgruendling.dueprocess.model.AppInfo;
 import com.bernhardgruendling.dueprocess.model.AppInfoMapper;
 import com.bernhardgruendling.dueprocess.ui.MainActivity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class HidingUtil {
@@ -82,16 +85,33 @@ public class HidingUtil {
 
         devicePolicyManager.setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_FEATURES_NONE);
 
+        restoreStoragePermissions(context, devicePolicyManager, adminComponentName, new AppSettings(context));
+
         AppSettings appSettings = new AppSettings(context);
         if (appSettings.getPreferenceBoolean(AppSettings.SHOW_SENSITIVE_APPS)) {
             showSensitiveApps(context);
         }
     }
 
+    private static void restoreStoragePermissions(Context context, DevicePolicyManager devicePolicyManager, ComponentName adminComponentName, AppSettings appSettings) {
+        List<ApplicationInfo> allApps = Util.getAllInstalledApplicationsSorted(context, false);
+        Set<String> appsWithGrantedStoragePermission = appSettings.getAppsWithGrantedStoragePermissions();
+        for (ApplicationInfo app : allApps) {
+            String packageName = app.packageName;
+            if (appsWithGrantedStoragePermission.contains(packageName)) {
+                devicePolicyManager.setPermissionGrantState(adminComponentName, packageName, Manifest.permission.READ_EXTERNAL_STORAGE, DevicePolicyManager.PERMISSION_GRANT_STATE_GRANTED);
+                devicePolicyManager.setPermissionGrantState(adminComponentName, packageName, Manifest.permission.WRITE_EXTERNAL_STORAGE, DevicePolicyManager.PERMISSION_GRANT_STATE_GRANTED);
+            }
+            devicePolicyManager.setPermissionGrantState(adminComponentName, packageName, Manifest.permission.READ_EXTERNAL_STORAGE, DevicePolicyManager.PERMISSION_GRANT_STATE_DEFAULT);
+            devicePolicyManager.setPermissionGrantState(adminComponentName, packageName, Manifest.permission.WRITE_EXTERNAL_STORAGE, DevicePolicyManager.PERMISSION_GRANT_STATE_DEFAULT);
+        }
+        devicePolicyManager.setPermissionPolicy(adminComponentName, DevicePolicyManager.PERMISSION_POLICY_PROMPT);
+    }
+
     public static void lockdownNow(Context context) {
         hideSensitiveApps(context);
         AppSettings appSettings = new AppSettings(context);
-        if(appSettings.getPreferenceBoolean(AppSettings.REMOVE_GOOGLE_ACCOUNT)) {
+        if (appSettings.getPreferenceBoolean(AppSettings.REMOVE_GOOGLE_ACCOUNT)) {
             AppInfoMapper appInfoMapper = new AppInfoMapper(context);
             hideApp(context, appInfoMapper.mapFromPackageName("com.google.android.gms"));
         }
@@ -106,6 +126,8 @@ public class HidingUtil {
         devicePolicyManager.addUserRestriction(adminComponentName, UserManager.DISALLOW_APPS_CONTROL);
         devicePolicyManager.setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_BIOMETRICS);
 
+        disableStoragePermissions(context, devicePolicyManager, adminComponentName, appSettings);
+
         if (appSettings.getPreferenceBoolean(AppSettings.HIDE_LAUNCHER_ICON)) {
             hideLauncherIcon(context, ALIAS_LAUNCH_ACTIVITY);
         }
@@ -119,5 +141,21 @@ public class HidingUtil {
         } catch (ClassCastException e) {
             //activity not available
         }
+    }
+
+    private static void disableStoragePermissions(Context context, DevicePolicyManager devicePolicyManager, ComponentName adminComponentName, AppSettings appSettings) {
+        PackageManager pM = context.getPackageManager();
+        List<ApplicationInfo> allApps = Util.getAllInstalledApplicationsSorted(context, false);
+        Set<String> appsWithGrantedStoragePermissions = new HashSet<>();
+        for (ApplicationInfo app : allApps) {
+            String packageName = app.packageName;
+            if (pM.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, packageName) == PackageManager.PERMISSION_GRANTED) {
+                appsWithGrantedStoragePermissions.add(packageName);
+            }
+            devicePolicyManager.setPermissionGrantState(adminComponentName, packageName, Manifest.permission.READ_EXTERNAL_STORAGE, DevicePolicyManager.PERMISSION_GRANT_STATE_DENIED);
+            devicePolicyManager.setPermissionGrantState(adminComponentName, packageName, Manifest.permission.WRITE_EXTERNAL_STORAGE, DevicePolicyManager.PERMISSION_GRANT_STATE_DENIED);
+        }
+        appSettings.setAppsWithGrantedStoragePermissions(appsWithGrantedStoragePermissions);
+        devicePolicyManager.setPermissionPolicy(adminComponentName, DevicePolicyManager.PERMISSION_POLICY_AUTO_DENY);
     }
 }

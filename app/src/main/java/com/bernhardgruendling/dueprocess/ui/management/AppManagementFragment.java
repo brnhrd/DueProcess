@@ -4,7 +4,6 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import com.bernhardgruendling.dueprocess.model.AppInfoMapper;
 import com.bernhardgruendling.dueprocess.util.HidingUtil;
 import com.bernhardgruendling.dueprocess.util.Util;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,27 +51,6 @@ public class AppManagementFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         this.view = view;
-    }
-
-    private List<ApplicationInfo> getAllInstalledApplicationsSorted() {
-        PackageManager pM = context.getPackageManager();
-        List<ApplicationInfo> allApps = pM.getInstalledApplications(
-                PackageManager.MATCH_UNINSTALLED_PACKAGES);
-        AppSettings appSettings = new AppSettings(context);
-        if (!appSettings.getPreferenceBoolean(AppSettings.SHOW_SYSTEM_APPS)) {
-            allApps.removeIf(n -> (isAndroidSystemPackageWithoutLaunchIntent(pM, n) || isWeirdPackage(n)));
-        }
-        allApps.removeIf(n -> n.packageName.equals(context.getPackageName()));
-        Collections.sort(allApps, new ApplicationInfo.DisplayNameComparator(pM));
-        return allApps;
-    }
-
-    private boolean isWeirdPackage(ApplicationInfo n) {
-        return n.packageName.equals("com.android.traceur") || n.packageName.equals("com.google.android.angle");
-    }
-
-    private boolean isAndroidSystemPackageWithoutLaunchIntent(PackageManager pM, ApplicationInfo n) {
-        return pM.getLaunchIntentForPackage(n.packageName) == null && !devicePolicyManager.isApplicationHidden(adminComponentName, n.packageName);
     }
 
     @Nullable
@@ -122,7 +99,8 @@ public class AppManagementFragment extends Fragment implements LoaderManager.Loa
         return new AsyncTaskLoader<List<AppInfo>>(getActivity()) {
             @Override
             public List<AppInfo> loadInBackground() {
-                List<ApplicationInfo> packages = getAllInstalledApplicationsSorted();
+                AppSettings appSettings = new AppSettings(context);
+                List<ApplicationInfo> packages = Util.getAllInstalledApplicationsSorted(context, appSettings.getPreferenceBoolean(AppSettings.SHOW_SYSTEM_APPS));
                 AppInfoMapper appInfoMapper = new AppInfoMapper(context);
                 return packages.stream().map(appInfoMapper::map).collect(Collectors.toList());
             }

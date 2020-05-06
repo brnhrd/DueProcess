@@ -36,9 +36,11 @@ public class AppSettings {
     public static final String IS_PROVISIONING_DONE = "isProvisioningDone";
     public static final String SHOW_SYSTEM_APPS = "showSystemApps";
     public static final String REMOVE_GOOGLE_ACCOUNT = "removeGoogleAccount";
+    public static final String STORAGE_GRANTED_APPS = "storageGrantedApps";
 
     private static final String SENSITIVE_APPS = "sensitiveApps";
     private static final String IS_FIRST_RUN = "isFirstRun";
+
 
     private Context context;
     private final SharedPreferences defaultPrefs;
@@ -69,7 +71,6 @@ public class AppSettings {
         appInfoPrefs.edit().putStringSet(SENSITIVE_APPS, sensitiveApps).apply();
     }
 
-
     public boolean getIsAppMarkedSensitive(AppInfo appInfo) {
         return getSensitivePackageNames().contains(appInfo.getPackageName());
     }
@@ -82,6 +83,14 @@ public class AppSettings {
         AppInfoMapper appInfoMapper = new AppInfoMapper(context);
         Set<String> packageNames = getSensitivePackageNames();
         return packageNames.stream().map(appInfoMapper::mapFromPackageName).collect(Collectors.toList());
+    }
+
+    public void setAppsWithGrantedStoragePermissions(Set<String> packagenames) {
+        appInfoPrefs.edit().putStringSet(STORAGE_GRANTED_APPS, packagenames).apply();
+    }
+
+    public Set<String> getAppsWithGrantedStoragePermissions() {
+        return appInfoPrefs.getStringSet(STORAGE_GRANTED_APPS, new HashSet<>());
     }
 
     public int getPreferenceInt(String key) {
@@ -137,9 +146,6 @@ public class AppSettings {
     public void setFirstRunDone() {
         defaultPrefs.edit().putBoolean(IS_FIRST_RUN, false).apply();
     }
-
-
-
 
     public boolean getIsPostProvisioningDone() {
         return defaultPrefs.getBoolean(IS_PROVISIONING_DONE, false);
