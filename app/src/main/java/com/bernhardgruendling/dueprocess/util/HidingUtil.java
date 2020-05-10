@@ -9,7 +9,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.UserManager;
 
-
 import com.bernhardgruendling.dueprocess.AppSettings;
 import com.bernhardgruendling.dueprocess.model.AppInfo;
 import com.bernhardgruendling.dueprocess.model.AppInfoMapper;
@@ -51,8 +50,16 @@ public class HidingUtil {
         }
     }
 
+    public static void hideApp(Context context, String packagename) {
+        setAppHidden(context, packagename, true);
+    }
+
     public static void hideApp(Context context, AppInfo appInfo) {
         setAppHidden(context, appInfo, true);
+    }
+
+    public static void showApp(Context context, String packagename) {
+        setAppHidden(context, packagename, false);
     }
 
     public static void showApp(Context context, AppInfo appInfo) {
@@ -60,9 +67,13 @@ public class HidingUtil {
     }
 
     public static void setAppHidden(Context context, AppInfo appInfo, boolean hidden) {
+        setAppHidden(context, appInfo.getPackageName(), hidden);
+    }
+
+    public static void setAppHidden(Context context, String packagename, boolean hidden) {
         DevicePolicyManager devicePolicyManager = Util.getDevicePolicyManager(context);
         ComponentName adminComponentName = Util.getAdminComponentName(context);
-        devicePolicyManager.setApplicationHidden(adminComponentName, appInfo.getPackageName(), hidden);
+        devicePolicyManager.setApplicationHidden(adminComponentName, packagename, hidden);
     }
 
     public static void endLockdownAndShowLauncherIcon(Context context) {
@@ -71,8 +82,7 @@ public class HidingUtil {
     }
 
     public static void endLockdown(Context context) {
-        AppInfoMapper appInfoMapper = new AppInfoMapper(context);
-        showApp(context, appInfoMapper.mapFromPackageName("com.google.android.gms"));
+        showApp(context, "com.google.android.gms");
 
         DevicePolicyManager devicePolicyManager = Util.getDevicePolicyManager(context);
         ComponentName adminComponentName = Util.getAdminComponentName(context);
@@ -116,8 +126,7 @@ public class HidingUtil {
         hideSensitiveApps(context);
         AppSettings appSettings = new AppSettings(context);
         if (appSettings.getPreferenceBoolean(AppSettings.REMOVE_GOOGLE_ACCOUNT)) {
-            AppInfoMapper appInfoMapper = new AppInfoMapper(context);
-            hideApp(context, appInfoMapper.mapFromPackageName("com.google.android.gms"));
+            hideApp(context, "com.google.android.gms");
         }
 
         DevicePolicyManager devicePolicyManager = Util.getDevicePolicyManager(context);
