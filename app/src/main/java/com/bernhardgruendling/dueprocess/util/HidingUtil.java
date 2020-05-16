@@ -11,7 +11,6 @@ import android.os.UserManager;
 
 import com.bernhardgruendling.dueprocess.AppSettings;
 import com.bernhardgruendling.dueprocess.model.AppInfo;
-import com.bernhardgruendling.dueprocess.model.AppInfoMapper;
 import com.bernhardgruendling.dueprocess.ui.MainActivity;
 
 import java.util.HashSet;
@@ -83,6 +82,10 @@ public class HidingUtil {
 
     public static void endLockdown(Context context) {
         showApp(context, "com.google.android.gms");
+        showApp(context, "com.android.providers.media");
+        showApp(context, "com.android.externalstorage");
+        showApp(context, "com.android.providers.downloads");
+        showApp(context, "com.android.traceur");
 
         DevicePolicyManager devicePolicyManager = Util.getDevicePolicyManager(context);
         ComponentName adminComponentName = Util.getAdminComponentName(context);
@@ -128,6 +131,11 @@ public class HidingUtil {
         if (appSettings.getPreferenceBoolean(AppSettings.REMOVE_GOOGLE_ACCOUNT)) {
             hideApp(context, "com.google.android.gms");
         }
+
+        hideApp(context, "com.android.providers.media");
+        hideApp(context, "com.android.externalstorage");
+        hideApp(context, "com.android.providers.downloads");
+        hideApp(context, "com.android.traceur");
 
         DevicePolicyManager devicePolicyManager = Util.getDevicePolicyManager(context);
         ComponentName adminComponentName = Util.getAdminComponentName(context);
