@@ -91,6 +91,7 @@ public class HidingUtil {
         clearUserRestrictions(devicePolicyManager, adminComponentName);
 
         devicePolicyManager.setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_FEATURES_NONE);
+        devicePolicyManager.getParentProfileInstance(adminComponentName).setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_FEATURES_NONE);
 
         restoreStoragePermissions(context, devicePolicyManager, adminComponentName, new AppSettings(context));
 
@@ -141,6 +142,7 @@ public class HidingUtil {
         setUserRestrictions(devicePolicyManager, adminComponentName);
 
         devicePolicyManager.setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_BIOMETRICS);
+        devicePolicyManager.getParentProfileInstance(adminComponentName).setKeyguardDisabledFeatures(adminComponentName, DevicePolicyManager.KEYGUARD_DISABLE_BIOMETRICS);
 
         disableStoragePermissions(context, devicePolicyManager, adminComponentName, appSettings);
 
