@@ -1,10 +1,9 @@
 package com.bernhardgruendling.dueprocess.ui.management;
 
+import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,7 +67,9 @@ public class LockdownFragment extends Fragment implements View.OnLongClickListen
                 showConfirmationDialogue();
                 break;
             case R.id.bLockdownNow:
-                HidingUtil.lockdownNow(context);
+                Runnable runnable = () -> HidingUtil.lockdownNow(context);
+                new Thread(runnable).start();
+                ((Activity) context).finishAndRemoveTask();
                 break;
         }
         return true;

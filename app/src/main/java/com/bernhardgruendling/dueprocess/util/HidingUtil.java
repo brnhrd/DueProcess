@@ -1,7 +1,6 @@
 package com.bernhardgruendling.dueprocess.util;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -152,11 +151,6 @@ public class HidingUtil {
             devicePolicyManager.lockNow(); //this locks the work profile without a notification
         } else if (appSettings.getPreferenceBoolean(AppSettings.LOCK_NOW_PROFILE) && appSettings.getPreferenceBoolean(AppSettings.LOCK_NOW_PROFILE_KEY_EVICT)) {
             devicePolicyManager.lockNow(DevicePolicyManager.FLAG_EVICT_CREDENTIAL_ENCRYPTION_KEY);
-        }
-        try {
-            ((Activity) context).finish();
-        } catch (ClassCastException e) {
-            //activity not available
         }
     }
 
