@@ -68,7 +68,7 @@
         <SwitchPreference
             app:defaultValue="false"
             app:key="lockNowProfileKeyEvict"
-            app:summary="This removes the encryption key from memory, making the the encrypted data within the profile inaccessible. This will show a persistent notification however."
+            app:summary="This removes the encryption key from memory, making the the encrypted data within the profile inaccessible even for sophisticated attackers. This will show a persistent notification however."
             app:title="Evict Encryption Key"
             app:dependency="lockNowProfile"
             />
