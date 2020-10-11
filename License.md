@@ -1,4 +1,4 @@
-# Licence
+# License
 
 Copyright © Bernhard Gründling, 2020
 
