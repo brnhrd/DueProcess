@@ -4,7 +4,7 @@ Hiding sensitive apps from prying eyes
 # App-based (Im)plausible Deniability for Android
 Confidentiality of data stored on mobile devices depends on one critical security boundary in case of physical access, the device's lockscreen. If an adversary is able to satisfy this lockscreen challenge, either through coercion (e.g. border control or customs check) or due to their close relationship to the victim (e.g. intimate partner abuse), private data is no longer protected. 
 
-Therefore, a solution is necessary that renders secrets not only inaccessible, but allows to plausibly deny their sole existence. This [thesis](https://git.ins.jku.at/theses/master/2020-gruendling-android-plausible-deniability/-/raw/master/MScThesis_BernhardGr%C3%BCndling.pdf?inline=true) proposes an app-based system that hides sensitive apps within Android's work profile, with a strong focus on usability. It introduces a lockdown mode that can be triggered inconspicuously from the device's lockscreen by entering a wrong PIN for example. Usability, security and current limitations of this approach are analyzed in detail.
+Therefore, a solution is necessary that renders secrets not only inaccessible, but allows to plausibly deny their sole existence. This [thesis](https://github.com/brnhrd/DueProcess/raw/master/docs/MScThesis_BernhardGr%C3%BCndling.pdf) proposes an app-based system that hides sensitive apps within Android's work profile, with a strong focus on usability. It introduces a lockdown mode that can be triggered inconspicuously from the device's lockscreen by entering a wrong PIN for example. Usability, security and current limitations of this approach are analyzed in detail.
 
 ## Analysis of Implementation Options
 <img src="/docs/img1.png" height="300" />
