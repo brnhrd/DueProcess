@@ -20,6 +20,6 @@ It allows users to hide apps on demand, on a per-app basis or by triggering a so
 
 The app uses the work profile feature of Android and runs inside of it. Android allows the use of a separate lockscreen for the work profile, which encrypts the data inside with a different key. 
 
-The APK can be aquired [here](https://github.com/brnhrd/DueProcess/releases), including a guided setup after installation. This enables users to perform downloads without attribution to their person.
+The APK can be acquired [here](https://github.com/brnhrd/DueProcess/releases), including a guided setup after installation. This enables users to perform downloads without attribution to their person.
 
 This repository holds its source code. Advanced users can review the source code and make changes to it, which can further increase plausible deniability. After that, the application package has to be built from the code. For recommended changes see chapter 4.1 in the thesis.
